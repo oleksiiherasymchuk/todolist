@@ -1,0 +1,56 @@
+.login {
+  width: 100vw;
+  height: 100vh;
+  background-color: #f8f8f8;
+  display: flex;
+}
+.loginLeft {
+  width: 50%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+.loginLeftForm {
+  height: 80%;
+  width: 80%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 20px;
+}
+.loginLeftForm h1 {
+  text-transform: uppercase;
+  font-weight: bold;
+  font-size: 32px;
+  letter-spacing: 2px;
+  margin-bottom: 10px;
+}
+.loginLeftForm p {
+  color: #636364;
+  font-size: 14px;
+}
+.loginLeftFormLogin {
+  margin-top: 30px;
+  width: 60%;
+  height: 70%;
+  display: flex;
+  justify-content: space-evenly;
+  flex-direction: column;
+}
+.loginLeftFormLogin p {
+  align-self: center;
+}
+.loginLeftFormLogin p span {
+  color: #3f50b5;
+}
+.loginRight {
+  width: 50%;
+  height: 100%;
+  background-image: url("../../images//todoli.png");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+}/*# sourceMappingURL=Login.module.css.map */

@@ -1,0 +1,64 @@
+.login {
+  width: 100vw;
+  height: 100vh;
+  background-color: #f8f8f8;
+  display: flex;
+
+  &Left {
+    width: 50%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+
+    &Form {
+      height: 80%;
+      width: 80%;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: center;
+      padding: 20px;
+
+      h1 {
+        text-transform: uppercase;
+        font-weight: bold;
+        font-size: 32px;
+        letter-spacing: 2px;
+        margin-bottom: 10px;
+      }
+
+      p {
+        color: #636364;
+        font-size: 14px;
+      }
+
+      &Login {
+        margin-top: 30px;
+        width: 60%;
+        height: 70%;
+        display: flex;
+        justify-content: space-evenly;
+        flex-direction: column;
+
+        p {
+          align-self: center;
+
+          span {
+            color: #3f50b5;
+          }
+        }
+      }
+    }
+  }
+
+  &Right {
+    width: 50%;
+    height: 100%;
+    background-image: url("../../images//todoli.png");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+  }
+}
