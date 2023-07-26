@@ -1,5 +1,5 @@
 import React from "react";
-import s from "./Login.module.css";
+import s from "../Login/Login.module.css";
 import FormControl from "@mui/joy/FormControl";
 import FormLabel from "@mui/joy/FormLabel";
 import Input from "@mui/joy/Input";
@@ -15,10 +15,14 @@ const Login: React.FC = (props: PropType) => {
     <div className={s.login}>
       <div className={s.loginLeft}>
         <div className={s.loginLeftForm}>
-          <h1>Welcome back</h1>
-          <p>Welcome back! Please enter your details.</p>
+          <h1>Sign up page</h1>
+          <p>Welcome! Please enter your details.</p>
 
           <div className={s.loginLeftFormLogin}>
+            <FormControl>
+              <FormLabel>Name</FormLabel>
+              <Input name="name" type="name" placeholder="Enter your name" />
+            </FormControl>
             <FormControl>
               <FormLabel>Email</FormLabel>
               <Input name="email" type="email" placeholder="Enter your email" />
@@ -31,19 +35,14 @@ const Login: React.FC = (props: PropType) => {
                 placeholder="***********"
               />
             </FormControl>
-            <Checkbox label="Remember me" />
-            <Button variant="solid">Sign in</Button>
+            <Button variant="solid">Sign up</Button>
             <Button variant="outlined" startDecorator={<GoogleIcon />}>
               Sign in with Google
             </Button>
             <p>
               Don't have an account?{" "}
               <span>
-                <NavLink
-                  to="/signup"
-                >
-                  Sign up for free!
-                </NavLink>
+                <NavLink to="/login">I have already an account</NavLink>
               </span>
             </p>
           </div>

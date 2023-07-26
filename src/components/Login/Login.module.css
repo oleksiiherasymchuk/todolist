@@ -13,7 +13,7 @@
   flex-direction: column;
 }
 .loginLeftForm {
-  height: 80%;
+  height: 90%;
   width: 80%;
   display: flex;
   flex-direction: column;
@@ -44,6 +44,10 @@
   align-self: center;
 }
 .loginLeftFormLogin p span {
+  color: #3f50b5;
+}
+.loginLeftFormLogin p span a {
+  text-decoration: none;
   color: #3f50b5;
 }
 .loginRight {
