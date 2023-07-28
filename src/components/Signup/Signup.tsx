@@ -3,7 +3,6 @@ import s from "../Login/Login.module.css";
 import FormControl from "@mui/joy/FormControl";
 import FormLabel from "@mui/joy/FormLabel";
 import Input from "@mui/joy/Input";
-import Checkbox from "@mui/joy/Checkbox";
 import Button from "@mui/joy/Button";
 import GoogleIcon from "@mui/icons-material/Google";
 import { NavLink } from "react-router-dom";

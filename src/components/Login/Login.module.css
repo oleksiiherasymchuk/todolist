@@ -40,6 +40,12 @@
   justify-content: space-evenly;
   flex-direction: column;
 }
+.loginLeftFormLogin a {
+  width: 100%;
+}
+.loginLeftFormLogin a button {
+  width: 100%;
+}
 .loginLeftFormLogin p {
   align-self: center;
 }

@@ -32,18 +32,22 @@ const Login: React.FC = (props: PropType) => {
               />
             </FormControl>
             <Checkbox label="Remember me" />
-            <Button variant="solid">Sign in</Button>
+
+            <NavLink to={"/profile"}>
+              <Button variant="solid">Sign in</Button>
+            </NavLink>
+
+            {/* <Button variant="solid">
+              <NavLink to={"/profile"}>Sign in</NavLink>
+            </Button> */}
+
             <Button variant="outlined" startDecorator={<GoogleIcon />}>
               Sign in with Google
             </Button>
             <p>
               Don't have an account?{" "}
               <span>
-                <NavLink
-                  to="/signup"
-                >
-                  Sign up for free!
-                </NavLink>
+                <NavLink to="/signup">Sign up for free!</NavLink>
               </span>
             </p>
           </div>
