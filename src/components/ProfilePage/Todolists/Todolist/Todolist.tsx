@@ -1,37 +1,59 @@
-import React from "react";
+import React, { ChangeEvent, useState } from "react";
 import s from "./Todolist.module.css";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddBoxRoundedIcon from "@mui/icons-material/AddBoxRounded";
 import { TextField } from "@mui/material";
-import EditRoundedIcon from "@mui/icons-material/EditRounded";
 import ClearIcon from "@mui/icons-material/Clear";
 import { useSelector } from "react-redux";
 import { AppReducerType } from "../../../../redux/store";
-import { TaskType } from "../../../../redux/appReducer";
+import {
+  TaskType,
+  addTask,
+  removeTask,
+  deleteTodolist,
+} from "../../../../redux/appReducer";
+import { useDispatch } from "react-redux";
 
 type PropType = {
   title: string;
-  // tasks: { [key: string]: TaskType[]; [key: number]: TaskType[]; },
+  listID: string | number;
 };
 
-const Todolist: React.FC<PropType> = ({ title }) => {
+const Todolist: React.FC<PropType> = ({ title, listID }) => {
+  const dispatch = useDispatch();
+
   const tasks: { [key: string | number]: TaskType[] } = useSelector(
     (state: AppReducerType) => state.app.tasks
   );
 
-  // Get the Todolist ID of the current Todolist based on its title
   const todolistID = useSelector(
     (state: AppReducerType) =>
       state.app.todolists.find((todolist) => todolist.todolistTitle === title)
         ?.id
   );
 
-  // Filter tasks belonging to the current Todolist ID
   const tasksForCurrentTodolist = todolistID ? tasks[todolistID] : [];
+
+  const [newTask, setNewTask] = useState<string>("");
+
+  const addTaskHandler = () => {
+    if (newTask.trim() !== "") {
+      dispatch(addTask(listID, newTask));
+      setNewTask("");
+    } else {
+      alert("You can not add empty task");
+    }
+  };
+
+  const onChangeTaskHandler = (e: ChangeEvent<HTMLInputElement>) => {
+    setNewTask(e.target.value);
+  };
+
+  const deleteTodolistHandler = () => dispatch(deleteTodolist(listID));
 
   return (
     <div className={s.todolist}>
-      <div className={s.todolistDelete}>
+      <div className={s.todolistDelete} onClick={deleteTodolistHandler}>
         <DeleteIcon color="primary" />
       </div>
       <h1>{title}</h1>
@@ -40,8 +62,10 @@ const Todolist: React.FC<PropType> = ({ title }) => {
           id="demo-helper-text-misaligned-no-helper"
           label="Task to do"
           size="small"
+          value={newTask}
+          onChange={onChangeTaskHandler}
         />
-        <button>
+        <button onClick={addTaskHandler}>
           <AddBoxRoundedIcon color="primary" sx={{ fontSize: 40 }} />
         </button>
       </div>
@@ -54,14 +78,13 @@ const Todolist: React.FC<PropType> = ({ title }) => {
         )}
         {tasksForCurrentTodolist.length !== 0 &&
           tasksForCurrentTodolist.map((task) => {
-            console.log(tasksForCurrentTodolist.length);
+            const removeTaskHandler = () => {
+              dispatch(removeTask(listID, task.id));
+            };
             return (
               <div className={s.todolistItemsGroup} key={task.id}>
                 <li className={s.todolistItemsGroupItem}>{task.task}</li>
-                <button className={s.edit}>
-                  <EditRoundedIcon sx={{ color: "#3f50b5" }} />
-                </button>
-                <button className={s.delete}>
+                <button className={s.delete} onClick={removeTaskHandler}>
                   <ClearIcon sx={{ color: "red" }} />
                 </button>
               </div>

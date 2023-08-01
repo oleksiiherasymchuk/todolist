@@ -1,4 +1,4 @@
-import React from "react";
+import React, { MouseEvent, useState } from "react";
 import s from "./Login.module.css";
 import FormControl from "@mui/joy/FormControl";
 import FormLabel from "@mui/joy/FormLabel";
@@ -6,11 +6,73 @@ import Input from "@mui/joy/Input";
 import Checkbox from "@mui/joy/Checkbox";
 import Button from "@mui/joy/Button";
 import GoogleIcon from "@mui/icons-material/Google";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth, provider } from "../../api/firebase";
+import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 type PropType = {};
 
 const Login: React.FC = (props: PropType) => {
+  const navigate = useNavigate();
+
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+
+  const loginWithGoogleHandler = (e: MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    signInWithPopup(auth, provider)
+      .then((userData) => {
+        const user = userData.user;
+        console.log(user);
+        navigate("/profile");
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        // The email of the user's account used.
+        const email = error.customData.email;
+        // The AuthCredential type that was used.
+        const credential = GoogleAuthProvider.credentialFromError(error);
+        console.log(errorCode);
+        console.log(errorMessage);
+        console.log(email);
+        console.log(credential);
+      });
+  };
+
+  const loginHandler = (e: MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    signInWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        const user = userCredential.user;
+        navigate("/profile");
+        console.log(user);
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        if (errorCode === "auth/wrong-password") {
+          toast.error("Incorrect email or password. Please try again.", {
+            position: toast.POSITION.TOP_RIGHT,
+          });
+        } else if (errorCode === "auth/user-not-found") {
+          toast.warn(
+            "The email you entered is not registered. Please check and try again.",
+            {
+              position: toast.POSITION.TOP_RIGHT,
+            }
+          );
+          setTimeout(() => {
+            navigate("/signup");
+          }, 5000);
+        }
+        setEmail("");
+        setPassword("");
+      });
+  };
+
   return (
     <div className={s.login}>
       <div className={s.loginLeft}>
@@ -21,7 +83,13 @@ const Login: React.FC = (props: PropType) => {
           <div className={s.loginLeftFormLogin}>
             <FormControl>
               <FormLabel>Email</FormLabel>
-              <Input name="email" type="email" placeholder="Enter your email" />
+              <Input
+                name="email"
+                type="email"
+                placeholder="Enter your email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
             </FormControl>
             <FormControl>
               <FormLabel>Password</FormLabel>
@@ -29,19 +97,21 @@ const Login: React.FC = (props: PropType) => {
                 name="password"
                 type="password"
                 placeholder="***********"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
               />
             </FormControl>
             <Checkbox label="Remember me" />
 
-            <NavLink to={"/profile"}>
-              <Button variant="solid">Sign in</Button>
-            </NavLink>
+            <Button variant="solid" onClick={loginHandler}>
+              Sign in
+            </Button>
 
-            {/* <Button variant="solid">
-              <NavLink to={"/profile"}>Sign in</NavLink>
-            </Button> */}
-
-            <Button variant="outlined" startDecorator={<GoogleIcon />}>
+            <Button
+              variant="outlined"
+              startDecorator={<GoogleIcon />}
+              onClick={loginWithGoogleHandler}
+            >
               Sign in with Google
             </Button>
             <p>
@@ -55,6 +125,7 @@ const Login: React.FC = (props: PropType) => {
       </div>
 
       <div className={s.loginRight}></div>
+      <ToastContainer />
     </div>
   );
 };

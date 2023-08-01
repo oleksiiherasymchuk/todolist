@@ -19,7 +19,7 @@ const Todolists: React.FC = (props: PropType) => {
       {todolists.map((t) => {
         return (
           <div key={t.id} draggable={true}>
-            <Todolist title={t.todolistTitle} />
+            <Todolist title={t.todolistTitle} listID={t.id} />
           </div>
         );
       })}

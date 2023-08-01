@@ -1,8 +1,7 @@
 .todolist {
   border: 1px solid #3f50b5;
   border-radius: 5px;
-  width: -moz-max-content;
-  width: max-content;
+  width: 97%;
   height: -moz-max-content;
   height: max-content;
   display: flex;
