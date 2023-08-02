@@ -8,7 +8,6 @@ import Modal from "@mui/material/Modal";
 import Input from "@mui/material/Input";
 import { useDispatch } from "react-redux";
 import { addTodolist } from "../../../redux/appReducer";
-// import AddBoxRoundedIcon from "@mui/icons-material/AddBoxRounded";
 
 const ariaLabel = { "aria-label": "description" };
 

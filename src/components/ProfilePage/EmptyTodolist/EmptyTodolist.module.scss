@@ -17,3 +17,17 @@
     font-weight: bold;
   }
 }
+
+@media screen and (min-width: 360px) and (max-width: 500px){
+  .todolist{
+    // padding: 20px;
+    width: 97%;
+  }
+}
+
+@media screen and (min-width: 501px) and (max-width: 700px){
+  .todolist{
+    // padding: 30px;
+    width: 47%;
+  }
+}

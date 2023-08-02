@@ -3,40 +3,16 @@ import { v1 } from "uuid";
 export enum typesAppReducer {
   ADD_TODOLIST = "todolist/appReducer/ADD_TODOLIST",
   ADD_TASK = "todolist/appReducer/ADD_TASK",
-  CHANGE_TASK_STATUS = "todolist/appReducer/CHANGE_TASK_STATUS",
   REMOVE_TASK = "todolist/appReducer/REMOVE_TASK",
   DELETE_TODOLIST = "todolist/appReducer/DELETE_TODOLIST",
+  SET_TASKS = "todolist/appReducer/SET_TASKS",
+  SET_TODOLISTS = "todolist/appReducer/SET_TODOLISTS",
+  DRAG_AND_DROP_TL = "todolist/appReducer/DRAG_AND_DROP_T"
 }
 
-// const todolistID1 = v1();
-// const todolistID2 = v1();
-// const todolistID3 = v1();
-
 const initialAppState: appStateType = {
-  todolists: [
-    // { id: todolistID1, todolistTitle: "Home tasks" },
-    // { id: todolistID2, todolistTitle: "Work tasks" },
-    // { id: todolistID3, todolistTitle: "IT tasks" },
-  ],
-  tasks: {
-    // [todolistID1]: [
-    //   { id: v1(), task: "task11", isDone: false },
-    //   { id: v1(), task: "task12", isDone: true },
-    //   { id: v1(), task: "task13", isDone: false },
-    // ],
-    // [todolistID2]: [
-    //   { id: v1(), task: "task21", isDone: false },
-    //   { id: v1(), task: "task22", isDone: true },
-    //   { id: v1(), task: "task23", isDone: false },
-    //   { id: v1(), task: "task24", isDone: false },
-    // ],
-    // [todolistID3]: [
-    //   { id: v1(), task: "task31", isDone: false },
-    //   { id: v1(), task: "task32", isDone: true },
-    //   { id: v1(), task: "task33", isDone: false },
-    //   { id: v1(), task: "task34", isDone: false },
-    // ],
-  },
+  todolists: [],
+  tasks: {}
 };
 
 const appReducer = (
@@ -99,20 +75,24 @@ const appReducer = (
         tasks: updatedTasks,
       };
     }
-    // case "todolist/appReducer/CHANGE_TASK_STATUS":
-    //   return {
-    //     ...state,
-    //     tasks: {
-    //       ...state.tasks,
-    //       [action.payload.todolistID]: state.tasks[
-    //         action.payload.todolistID
-    //       ].map((task) =>
-    //         task.id === action.payload.taskID
-    //           ? { ...task, isDone: action.payload.status }
-    //           : task
-    //       ),
-    //     },
-    //   };
+    case typesAppReducer.SET_TASKS: {
+      return {
+        ...state,
+        tasks: action.payload.tasks,
+      };
+    }
+    case typesAppReducer.SET_TODOLISTS: {
+      return {
+        ...state,
+        todolists: action.payload.todolists,
+      };
+    }
+    case typesAppReducer.DRAG_AND_DROP_TL: {
+      return {
+        ...state,
+        todolists: action.payload.todolists
+      }
+    }
     default:
       return state;
   }
@@ -157,25 +137,27 @@ export const removeTask = (
     payload: { todolistID, taskID },
   } as const);
 
-export const changeTaskStatus = (
-  todolistID: string | number,
-  taskID: string | number,
-  status: boolean
-) =>
-  ({
-    type: typesAppReducer.CHANGE_TASK_STATUS,
-    payload: { todolistID, taskID, status },
-  } as const);
+export const setTasks = (tasks: { [key: string]: TaskType[] }) =>
+  ({ type: typesAppReducer.SET_TASKS, payload: { tasks } } as const);
+export const setTodolists = (todolists: TodolistType[]) =>
+  ({ type: typesAppReducer.SET_TODOLISTS, payload: { todolists } } as const);
+
+export const dragAndDropTL = (todolists: TodolistType[]) => 
+  ({ type: typesAppReducer.DRAG_AND_DROP_TL, payload: { todolists } } as const)
 
 export type addTodolistACType = ReturnType<typeof addTodolist>;
 export type addTaskACType = ReturnType<typeof addTask>;
-export type changeTaskStatusACType = ReturnType<typeof changeTaskStatus>;
 export type removeTaskACType = ReturnType<typeof removeTask>;
 export type deleteTodolistACType = ReturnType<typeof deleteTodolist>;
+export type setTasksACType = ReturnType<typeof setTasks>;
+export type setTodolistsACType = ReturnType<typeof setTodolists>;
+export type dragAndDropTLACType = ReturnType<typeof dragAndDropTL> 
 
 type ActionType =
   | addTaskACType
   | addTodolistACType
-  | changeTaskStatusACType
   | removeTaskACType
-  | deleteTodolistACType;
+  | deleteTodolistACType
+  | setTasksACType
+  | setTodolistsACType
+  | dragAndDropTLACType;

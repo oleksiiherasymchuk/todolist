@@ -41,50 +41,105 @@
       }
     }
   }
+  &Button {
+    display: flex;
+    justify-content: space-between;
+    width: 25%;
+    height: 40px;
+    // border: 1px solid yellow;
+
+    &User {
+      width: 200px;
+      height: 40px;
+      border-radius: 10px;
+      border: 1px solid #f8f8f8;
+      background: #3f50b5;
+      color: #f8f8f8;
+    }
+
+    &User:hover {
+      border: 1px solid #3f50b5;
+      background-color: #f8f8f8;
+      color: #3f50b5;
+    }
+
+    &Log {
+      width: 80px;
+      height: 40px;
+      border-radius: 10px;
+      border: 1px solid #f8f8f8;
+      color: #3f50b5;
+      background-color: #f8f8f8;
+
+      // a{
+      //   text-decoration: none;
+      //   color: #3f50b5;
+      //   color: orange;
+      // }
+    }
+
+    &Log:hover {
+      color: #f8f8f8;
+      background-color: #3f50b5;
+      border: 1px solid #f8f8f8;
+    }
+  }
 }
 
-&Button {
-  display: flex;
-  justify-content: space-between;
-  width: 25%;
-  height: 40px;
-  // border: 1px solid yellow;
+@media screen and (min-width: 360px) and (max-width: 500px) {
+  .header {
+    &Logo {
+      width: 20%;
+    }
 
-  &User {
-    width: 200px;
-    height: 40px;
-    border-radius: 10px;
-    border: 1px solid #f8f8f8;
-    background: #3f50b5;
-    color: #f8f8f8;
+    &Menu {
+      display: none;
+    }
+
+    &Button {
+      width: 70%;
+
+      &User{
+        width: 60%;
+      }
+    }
   }
+}
 
-  &User:hover {
-    border: 1px solid #3f50b5;
-    background-color: #f8f8f8;
-    color: #3f50b5;
+@media screen and (min-width: 501px) and (max-width: 700px) {
+  .header {
+    &Logo {
+      width: 20%;
+    }
+
+    &Menu {
+      display: none;
+    }
+
+    &Button {
+      width: 70%;
+
+     
+    }
   }
+}
 
-  &Log {
-    width: 80px;
-    height: 40px;
-    border-radius: 10px;
-    border: 1px solid #f8f8f8;
-    color: #3f50b5;
-    background-color: #f8f8f8;
+@media screen and (min-width: 701px) and (max-width: 960px) {
+  .header {
+    &Logo {
+      width: 15%;
+    }
 
-    // a{
-    //   text-decoration: none;
-    //   color: #3f50b5;
-    //   color: orange;
-    // }
+    &Menu {
+      display: none;
+    }
+
+    &Button {
+      width: 40%;
+
+      &User{
+        width: 65%;
+      }
+    }
   }
-
-  &Log:hover {
-    color: #f8f8f8;
-    background-color: #3f50b5;
-    border: 1px solid #f8f8f8;
-  }
-
-  
 }
