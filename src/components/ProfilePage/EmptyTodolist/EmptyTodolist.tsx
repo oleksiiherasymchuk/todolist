@@ -47,7 +47,9 @@ const EmptyTodolist: React.FC = (props: PropType) => {
       if (e.code === "Enter") {
         dispatch(addTodolist(todolistTitle));
         setTodolistTitle("");
-        handleClose();
+        setTimeout(() => {
+          handleClose();
+        }, 0)
       }
     }
   };

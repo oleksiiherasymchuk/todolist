@@ -31,14 +31,10 @@ const Login: React.FC = (props: PropType) => {
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
-        // The email of the user's account used.
         const email = error.customData.email;
-        // The AuthCredential type that was used.
         const credential = GoogleAuthProvider.credentialFromError(error);
         console.log(errorCode);
         console.log(errorMessage);
-        console.log(email);
-        console.log(credential);
       });
   };
 
@@ -47,10 +43,7 @@ const Login: React.FC = (props: PropType) => {
 
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
-        // Signed in
         const user = userCredential.user;
-        console.log(user);
-
         toast.success("Registration successful! You can now log in.", {
           position: toast.POSITION.TOP_RIGHT,
         });

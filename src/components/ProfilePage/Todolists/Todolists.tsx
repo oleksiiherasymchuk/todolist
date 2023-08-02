@@ -39,8 +39,6 @@ const Todolists: React.FC = (props: PropType) => {
       const newTodolists = [...todolists];
       const draggedTodolist = newTodolists.splice(draggedOverIndex, 1)[0];
       newTodolists.splice(targetIndex, 0, draggedTodolist);
-
-      // setTodolists(newTodolists);
       dispatch(setTodolists(newTodolists));
       setDraggedOverIndex(targetIndex);
     }
@@ -51,18 +49,11 @@ const Todolists: React.FC = (props: PropType) => {
       const newTodolists = [...todolists];
       const draggedTodolist = newTodolists.splice(draggedOverIndex, 1)[0];
       newTodolists.splice(draggedOverIndex, 0, draggedTodolist);
-
       dispatch(dragAndDropTL(newTodolists));
     }
-
     dragNode.current?.removeEventListener("dragend", dragEndHandler);
     setDraggedOverIndex(null);
   };
-
-  useEffect(() => {
-    console.log(todolists);
-    
-  }, [todolists])
 
   return (
     <div className={s.todolists}>
@@ -74,7 +65,7 @@ const Todolists: React.FC = (props: PropType) => {
           className={s.todolistsDraggable}
           onDragStart={(e) => dragStartHandler(e, index)}
           onDragEnter={(e) => dragEnterHandler(e, index)}
-          onDragOver={(e) => e.preventDefault()} // Needed for drop to work
+          onDragOver={(e) => e.preventDefault()}
         >
           <Todolist title={t.todolistTitle} listID={t.id} />
         </div>

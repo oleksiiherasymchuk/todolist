@@ -41,7 +41,6 @@ const Todolist: React.FC<PropType> = ({ title, listID }) => {
   };
 
   const loadTasksFromLocalStorage = (): { [key: string]: TaskType[] } => {
-    // debugger
     const getTasksFromLocalStorage = localStorage.getItem("tasks");
     // return getTasksFromLocalStorage ? JSON.parse('tasks') : {}
     return getTasksFromLocalStorage ? tasks : {};
@@ -63,14 +62,12 @@ const Todolist: React.FC<PropType> = ({ title, listID }) => {
   const deleteTodolistHandler = () => dispatch(deleteTodolist(listID));
 
   useEffect(() => {
-    // debugger
     const getTasksFromLocalStorage = loadTasksFromLocalStorage();
     console.log(getTasksFromLocalStorage);
     dispatch(setTasks(getTasksFromLocalStorage));
   }, [dispatch]);
 
   useEffect(() => {
-    // debugger
     saveTasksToLocalStorage(tasks);
     console.log(tasks);
     
