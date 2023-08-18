@@ -7,7 +7,13 @@ import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 import Input from "@mui/material/Input";
 import { useDispatch } from "react-redux";
-import { addTodolist } from "../../../redux/appReducer";
+import {
+  addTodolist,
+} from "../../../redux/appReducer";
+import { auth, database } from "../../../api/firebase";
+import { setDoc, doc } from "firebase/firestore";
+import { Dispatch } from "redux";
+import { v1 } from "uuid";
 
 const ariaLabel = { "aria-label": "description" };
 
@@ -34,7 +40,7 @@ const style = {
 type PropType = {};
 
 const EmptyTodolist: React.FC = (props: PropType) => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<Dispatch>();
 
   const [open, setOpen] = useState(false);
   const [todolistTitle, setTodolistTitle] = useState("");
@@ -42,14 +48,44 @@ const EmptyTodolist: React.FC = (props: PropType) => {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
+  const currentUser = auth.currentUser;
+
   const addTodolistHandler = (e: KeyboardEvent<HTMLInputElement>) => {
     if (todolistTitle.trim() !== "") {
       if (e.code === "Enter") {
-        dispatch(addTodolist(todolistTitle));
-        setTodolistTitle("");
-        setTimeout(() => {
-          handleClose();
-        }, 0)
+        if (currentUser) {
+          const userUID = currentUser.uid;
+          const todolistData = {
+            // todolistID: currentUser.uid,
+            todolistID: v1(),
+            todolistTitle: todolistTitle,
+          };
+
+          // console.log('new created todolistID',todolistData);
+          
+
+          const todolistCollectionRef = doc(
+            database,
+            `users/${userUID}/todolists`,
+            todolistTitle
+          );
+          setDoc(todolistCollectionRef, todolistData)
+            .then(() => {
+              // console.log("Todolist title saved to Firestore", todolistData);
+              dispatch(addTodolist(todolistTitle));
+              setTodolistTitle("");
+              setTimeout(() => {
+                handleClose();
+              }, 0);
+            })
+            .catch((error) => {
+              console.error("Error saving todolist title to Firestore:", error);
+            });
+          setTodolistTitle("");
+          setTimeout(() => {
+            handleClose();
+          }, 0);
+        }
       }
     }
   };

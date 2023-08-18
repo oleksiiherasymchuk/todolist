@@ -5,17 +5,21 @@ import { useNavigate } from "react-router-dom";
 import { auth } from "../../../api/firebase";
 import { signOut } from "firebase/auth";
 import { onAuthStateChanged } from "firebase/auth";
+import { useDispatch } from "react-redux";
+import { isAuth } from "../../../redux/appReducer";
 
 type PropType = {};
 
 const Header: React.FC = (props: PropType) => {
   const navigate = useNavigate();
+  const dispatch = useDispatch()
 
   const [currentUserEmail, setCurrentUserEmail] = useState<string | null>("");
 
   const logoutHandler = () => {
     signOut(auth)
       .then(() => {
+        dispatch(isAuth(false) as any)
         navigate("/login");
       })
       .catch((error) => {

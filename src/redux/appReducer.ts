@@ -1,3 +1,4 @@
+// import { Dispatch } from "redux";
 import { v1 } from "uuid";
 
 export enum typesAppReducer {
@@ -7,12 +8,15 @@ export enum typesAppReducer {
   DELETE_TODOLIST = "todolist/appReducer/DELETE_TODOLIST",
   SET_TASKS = "todolist/appReducer/SET_TASKS",
   SET_TODOLISTS = "todolist/appReducer/SET_TODOLISTS",
-  DRAG_AND_DROP_TL = "todolist/appReducer/DRAG_AND_DROP_T"
+  DRAG_AND_DROP_TL = "todolist/appReducer/DRAG_AND_DROP_T",
+  SET_UPDATED_TASKS = "todolist/appReducer/SET_UPDATED_TASKS",
+  IS_AUTH = "todolist/appReducer/IS_AUTH",
 }
 
 const initialAppState: appStateType = {
   todolists: [],
-  tasks: {}
+  tasks: {},
+  isAuth: false,
 };
 
 const appReducer = (
@@ -23,7 +27,7 @@ const appReducer = (
     case typesAppReducer.ADD_TASK: {
       const { todolistID, task } = action.payload;
       const newTask = {
-        id: v1(),
+        taskID: v1(),
         task: task,
         isDone: false,
       };
@@ -42,7 +46,7 @@ const appReducer = (
         tasks: {
           ...state.tasks,
           [todolistID]: [
-            ...state.tasks[todolistID].filter((task) => task.id !== taskID),
+            ...state.tasks[todolistID].filter((task) => task.taskID !== taskID),
           ],
         },
       };
@@ -57,9 +61,8 @@ const appReducer = (
         todolists: [...state.todolists, newTodolist],
         tasks: {
           ...state.tasks,
-          [newTodolist.id]: [], // Add an empty array for the new Todolist's tasks
+          [newTodolist.id]: [],
         },
-        // tasks: {...state.tasks[newTodolist]}
       };
     }
     case typesAppReducer.DELETE_TODOLIST: {
@@ -81,6 +84,16 @@ const appReducer = (
         tasks: action.payload.tasks,
       };
     }
+    case typesAppReducer.SET_UPDATED_TASKS: {
+      const { todolistID, tasks } = action.payload;
+      return {
+        ...state,
+        tasks: {
+          ...state.tasks,
+          [todolistID]: tasks,
+        },
+      };
+    }
     case typesAppReducer.SET_TODOLISTS: {
       return {
         ...state,
@@ -90,8 +103,14 @@ const appReducer = (
     case typesAppReducer.DRAG_AND_DROP_TL: {
       return {
         ...state,
-        todolists: action.payload.todolists
-      }
+        todolists: action.payload.todolists,
+      };
+    }
+    case typesAppReducer.IS_AUTH: {
+      return {
+        ...state,
+        isAuth: action.payload,
+      };
     }
     default:
       return state;
@@ -100,10 +119,12 @@ const appReducer = (
 
 export default appReducer;
 
+// ------------------------------------------------------------------------
+// types
+
 export type TaskType = {
-  id: string | number;
+  taskID: string | number;
   task: string;
-  isDone: boolean;
 };
 
 export type TodolistType = {
@@ -111,11 +132,20 @@ export type TodolistType = {
   todolistTitle: string;
 };
 
+export type TodolistWithTasksType = {
+  todolistTitle: string,
+  tasks: TaskType[],
+  todolistID: string | number,
+}
+
 export type appStateType = {
   todolists: TodolistType[];
   tasks: { [key: string | number]: TaskType[] };
+  isAuth: boolean;
 };
 
+// ------------------------------------------------------------------------
+// action creators
 export const addTodolist = (todolistTitle: string) =>
   ({ type: typesAppReducer.ADD_TODOLIST, payload: todolistTitle } as const);
 
@@ -142,8 +172,51 @@ export const setTasks = (tasks: { [key: string]: TaskType[] }) =>
 export const setTodolists = (todolists: TodolistType[]) =>
   ({ type: typesAppReducer.SET_TODOLISTS, payload: { todolists } } as const);
 
-export const dragAndDropTL = (todolists: TodolistType[]) => 
-  ({ type: typesAppReducer.DRAG_AND_DROP_TL, payload: { todolists } } as const)
+export const dragAndDropTL = (todolists: TodolistType[]) =>
+  ({ type: typesAppReducer.DRAG_AND_DROP_TL, payload: { todolists } } as const);
+
+export const updateTasks = (
+  todolistID: string | number,
+  updatedTasks: TaskType[]
+) =>
+  ({
+    type: typesAppReducer.SET_UPDATED_TASKS,
+    payload: { todolistID, tasks: updatedTasks },
+  } as const);
+
+export const isAuth = (isAuth: boolean) =>
+  ({
+    type: typesAppReducer.IS_AUTH,
+    payload: isAuth,
+  } as const);
+
+// ------------------------------------------------------------------------
+// thunk
+// const currentUser = auth.currentUser;
+
+
+// export const addNewTodolistThunk =
+//   (todolistTitle: string) => async (dispatch: Dispatch<ActionType>) => {
+//     const userUID = currentUser?.uid;
+//     const todolistData = {
+//       todolistID: currentUser?.uid,
+//       todolistTitle: todolistTitle,
+//     };
+
+//     const todolistCollectionRef = doc(
+//       database,
+//       `users/${userUID}/todolists`,
+//       todolistTitle
+//     );
+//     setDoc(todolistCollectionRef, todolistData)
+//       .then(() => {
+//         console.log("Todolist title saved to Firestore", todolistData);
+//         dispatch(addTodolist(todolistTitle));
+//       })
+//       .catch((error) => {
+//         console.error("Error saving todolist title to Firestore:", error);
+//       });
+//   };
 
 export type addTodolistACType = ReturnType<typeof addTodolist>;
 export type addTaskACType = ReturnType<typeof addTask>;
@@ -151,7 +224,9 @@ export type removeTaskACType = ReturnType<typeof removeTask>;
 export type deleteTodolistACType = ReturnType<typeof deleteTodolist>;
 export type setTasksACType = ReturnType<typeof setTasks>;
 export type setTodolistsACType = ReturnType<typeof setTodolists>;
-export type dragAndDropTLACType = ReturnType<typeof dragAndDropTL> 
+export type dragAndDropTLACType = ReturnType<typeof dragAndDropTL>;
+export type updatedTasksACType = ReturnType<typeof updateTasks>;
+export type isAuthACType = ReturnType<typeof isAuth>;
 
 type ActionType =
   | addTaskACType
@@ -160,4 +235,6 @@ type ActionType =
   | deleteTodolistACType
   | setTasksACType
   | setTodolistsACType
-  | dragAndDropTLACType;
+  | dragAndDropTLACType
+  | updatedTasksACType
+  | isAuthACType;

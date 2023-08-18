@@ -4,13 +4,12 @@ import FormControl from "@mui/joy/FormControl";
 import FormLabel from "@mui/joy/FormLabel";
 import Input from "@mui/joy/Input";
 import Button from "@mui/joy/Button";
-import GoogleIcon from "@mui/icons-material/Google";
 import { NavLink, useNavigate } from "react-router-dom";
-import { auth, provider } from "../../api/firebase";
+import { auth, database } from "../../api/firebase";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { collection, setDoc, doc } from "firebase/firestore";
 
 type PropType = {};
 
@@ -19,24 +18,7 @@ const Login: React.FC = (props: PropType) => {
 
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-
-  const loginWithGoogleHandler = (e: MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    signInWithPopup(auth, provider)
-      .then((userData) => {
-        const user = userData.user;
-        console.log(user);
-        navigate("/profile");
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        const email = error.customData.email;
-        const credential = GoogleAuthProvider.credentialFromError(error);
-        console.log(errorCode);
-        console.log(errorMessage);
-      });
-  };
+  const [userName, setUserName] = useState<string>("");
 
   const loginHandler = (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -44,14 +26,29 @@ const Login: React.FC = (props: PropType) => {
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         const user = userCredential.user;
-        toast.success("Registration successful! You can now log in.", {
-          position: toast.POSITION.TOP_RIGHT,
-        });
-        setEmail("");
-        setPassword("");
-        setTimeout(() => {
-          navigate("/login");
-        }, 5000);
+        const dataUser = {
+          userID: user.uid,
+          email: user.email,
+          name: userName,
+        };
+        const usersCollectionRef = collection(database, "users");
+        const userDocRef = doc(usersCollectionRef, user.uid);
+        setDoc(userDocRef, dataUser)
+          .then(() => {
+            console.log("user signed up");
+            toast.success("Registration successful! You can now log in.", {
+              position: toast.POSITION.TOP_RIGHT,
+            });
+            setEmail("");
+            setPassword("");
+            setUserName("")
+            setTimeout(() => {
+              navigate("/login");
+            }, 5000);
+          })
+          .catch((error) => {
+            console.error("user sign up failed", error);
+          });
       })
       .catch((error) => {
         const errorCode = error.code;
@@ -77,7 +74,6 @@ const Login: React.FC = (props: PropType) => {
             }
           );
         }
-        console.log(errorCode);
         console.log(errorMessage);
       });
   };
@@ -90,6 +86,17 @@ const Login: React.FC = (props: PropType) => {
           <p>Welcome! Please enter your details.</p>
 
           <div className={s.loginLeftFormLogin}>
+            <FormControl>
+              <FormLabel>Name</FormLabel>
+              <Input
+                name="name"
+                type="text"
+                placeholder="Enter your name"
+                required
+                value={userName}
+                onChange={(e) => setUserName(e.target.value)}
+              />
+            </FormControl>
             <FormControl>
               <FormLabel>Email</FormLabel>
               <Input
@@ -114,13 +121,6 @@ const Login: React.FC = (props: PropType) => {
             </FormControl>
             <Button variant="solid" onClick={loginHandler}>
               Sign up
-            </Button>
-            <Button
-              variant="outlined"
-              startDecorator={<GoogleIcon />}
-              onClick={loginWithGoogleHandler}
-            >
-              Sign in with Google
             </Button>
             <p>
               Don't have an account?{" "}

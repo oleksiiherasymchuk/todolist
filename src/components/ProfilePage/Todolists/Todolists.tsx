@@ -5,11 +5,14 @@ import EmptyTodolist from "../EmptyTodolist/EmptyTodolist";
 import { useSelector } from "react-redux";
 import {
   TodolistType,
+  // TodolistWithTasksType,
   dragAndDropTL,
   setTodolists,
 } from "../../../redux/appReducer";
 import { AppReducerType } from "../../../redux/store";
 import { useDispatch } from "react-redux";
+// import { collection, getDocs, query } from "firebase/firestore";
+// import { auth, database } from "../../../api/firebase";
 
 type PropType = {};
 
@@ -55,21 +58,83 @@ const Todolists: React.FC = (props: PropType) => {
     setDraggedOverIndex(null);
   };
 
+  // const [currentUserTodolists, setCurrentUserTodolists] = useState<
+  //   TodolistWithTasksType[]
+  // >([]);
+
+  // const todolistsWithTasks: any = [];
+
+  // const getT = async () => {
+  //   const currentUser = auth.currentUser;
+  //   const userUID = currentUser?.uid;
+
+  //   const todolistQuery = query(
+  //     collection(database, `users/${userUID}/todolists`)
+  //   );
+
+  //   const querySnapshot = await getDocs(todolistQuery);
+
+  //   // const todolistsWithTasks: TodolistWithTasksType[] = [];
+  //   querySnapshot.forEach((doc) => {
+  //     const todolistData = doc.data();
+  //     const todolistTitle = doc.id;
+  //     // const loadedTodolistID = doc.data()?.todolistID;
+  //     // setTodolistID(loadedTodolistID);
+  //     // console.log(todolistID);
+  //     // console.log(todolistData);
+  //     // console.log(todolistTitle);
+  //     todolistsWithTasks.push({ todolistTitle, ...todolistData });
+  //     // todolists.push({ todolistTitle, tasks: todolistData.tasks });
+  //     // console.log(todolistsWithTasks);
+  //   });
+  //   return todolistsWithTasks;
+  //   // setCurrentUserTodolists(todolists);
+  // };
+
+  // useEffect(() => {
+  //   getT();
+  // });
+
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     const todolistsWithTasks = await getT();
+  //     setCurrentUserTodolists(todolistsWithTasks);
+  //   };
+
+  //   fetchData();
+  // }, []);
+
+  // useEffect(() => {
+  //   console.log(currentUserTodolists);
+  // }, [currentUserTodolists, todolists]);
+
   return (
     <div className={s.todolists}>
       <EmptyTodolist />
-      {todolists.map((t, index) => (
-        <div
-          key={t.id}
-          draggable={true}
-          className={s.todolistsDraggable}
-          onDragStart={(e) => dragStartHandler(e, index)}
-          onDragEnter={(e) => dragEnterHandler(e, index)}
-          onDragOver={(e) => e.preventDefault()}
-        >
-          <Todolist title={t.todolistTitle} listID={t.id} />
-        </div>
-      ))}
+      {/* {todolistsWithTasks.map((t: any, index: any) => { */}
+      {/* {currentUserTodolists.map((t, index) => { */}
+         {todolists.map((t, index) => {
+        // console.log(t);
+        return (
+          <div
+            key={t.id}
+            // key={t.todolistID}
+            draggable={true}
+            className={s.todolistsDraggable}
+            onDragStart={(e) => dragStartHandler(e, index)}
+            onDragEnter={(e) => dragEnterHandler(e, index)}
+            onDragOver={(e) => e.preventDefault()}
+          >
+            <Todolist
+              title={t.todolistTitle}
+              listID={t.id}
+
+              // listID={t.todolistID}
+              // loadedTasks={t.tasks}
+            />
+          </div>
+        );
+      })}
     </div>
   );
 };
